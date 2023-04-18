@@ -1,4 +1,4 @@
--- title: platformer_template
+
 -- desc: A simple platformer based on an introductory TIC-80 tutorial. 
 -- author: Lucas Friedman
 -- script: lua
@@ -17,6 +17,44 @@ function solid(x,y)
     return solids[mget((x)//8,(y)//8)]
 end
 
+-- Collision functions for 4 corners of the player square
+
+function topleft(p)
+    if solid(p.x+p.vx,p.y+p.vy) then
+        return true
+    end
+end
+
+function topright(p)
+    if solid(p.x+7+p.vx,p.y+p.vy) then
+        return true
+    end
+end
+
+function lowleft(p)
+    if solid(p.x+p.vx,p.y+7+p.vy) then
+        return true
+    end
+end
+
+function lowright(p)
+    if solid(p.x+7+p.vx,p.y+7+p.vy) then
+        return true
+    end
+end
+
+function bottomleft(p)
+    if solid(p.x+p.vx,p.y+8+p.vy) then
+        return true
+    end
+end
+
+function bottomright(p)
+    if solid(p.x+7+p.vx,p.y+8+p.vy) then
+        return true
+    end
+end
+
 init()
 
 function TIC()
@@ -32,12 +70,12 @@ function TIC()
 
     -- Collisions
     -- Horizontal collisions (any of the 4 corners)
-    if solid(p.x+p.vx,p.y+p.vy) or solid(p.x+7+p.vx,p.y+p.vy) or solid(p.x+p.vx,p.y+7+p.vy) or solid(p.x+7+p.vx,p.y+7+p.vy) then
+    if topleft(p) or topright(p) or lowleft(p) or lowright(p) then
         p.vx=0
     end
 
     -- Vertical collisions along BOTTOM edge     
-    if solid(p.x+p.vx,p.y+8+p.vy) or solid(p.x+7+p.vx,p.y+8+p.vy) then
+    if bottomleft(p) or bottomright(p) then
         p.vy=0
     else
         -- Gravitational constant
@@ -46,10 +84,11 @@ function TIC()
   
     -- Vertical collisions along TOP edge
     -- if jumping (vy<0) and either top corner would move into a solid...
-    if p.vy<0 and (solid(p.x+p.vx,p.y+p.vy) or solid(p.x+7+p.vx,p.y+p.vy)) then
+    if p.vy<0 and (topleft(p) or topright(p)) then
         -- Reduce vertical velocity to zero, then apply gravitational constant
         p.vy=0
-        if not (solid(p.x+p.vx,p.y+8+p.vy) or solid(p.x+7+p.vx,p.y+8+p.vy)) then
+        -- if bottom corners aren't on the ground already, fall
+        if not (bottomleft(p) or bottomright(p)) then
             p.vy=p.vy+0.2
         end
     end
