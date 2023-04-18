@@ -45,9 +45,13 @@ function TIC()
     end
   
     -- Vertical collisions along TOP edge
+    -- if jumping (vy<0) and either top corner would move into a solid...
     if p.vy<0 and (solid(p.x+p.vx,p.y+p.vy) or solid(p.x+7+p.vx,p.y+p.vy)) then
+        -- Reduce vertical velocity to zero, then apply gravitational constant
         p.vy=0
-        p.vy=p.vy+0.2
+        if not (solid(p.x+p.vx,p.y+8+p.vy) or solid(p.x+7+p.vx,p.y+8+p.vy)) then
+            p.vy=p.vy+0.2
+        end
     end
 
     p.x=p.x+p.vx
