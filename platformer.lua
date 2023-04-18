@@ -47,6 +47,7 @@ function TIC()
     -- Vertical collisions along TOP edge
     if p.vy<0 and (solid(p.x+p.vx,p.y+p.vy) or solid(p.x+7+p.vx,p.y+p.vy)) then
         p.vy=0
+        p.vy=p.vy+0.2
     end
 
     p.x=p.x+p.vx
