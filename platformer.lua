@@ -4,7 +4,7 @@
 -- script: lua
 --
 function init()
-    solids = {[2]=true,[3]=true}
+    solids = {[2]=true,[3]=true,[4]=true,[5]=true}
     p={
         x=120,
         y=68,
@@ -55,6 +55,16 @@ function bottomright(p)
     end
 end
 
+-- REMAP Function for punching blocks
+
+function remap(tile,x,y)
+    local outTile=tile
+    if tile=4 and x=9 and y=9 then
+        if (topleft(p) or topright(p)) then
+           outTile=5
+        end
+end
+
 init()
 
 function TIC()
@@ -99,6 +109,7 @@ function TIC()
 
     cls()
     map()
+    -- remap(5,9,9)
     rect(p.x,p.y,8,8,4)
 end
 
